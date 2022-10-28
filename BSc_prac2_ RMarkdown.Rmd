@@ -1,0 +1,79 @@
+---
+title: 'Practical 2: BSc tutorials'
+author: "MAC"
+date: "2022-10-24"
+output: html_document
+---
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. In this exercise you will need to install the following packages:
+
+ggplot2
+ggthemes
+
+
+## Import the Data
+The first step will be to import the data set. In this case I am using the file from last week.
+
+```{r}
+setwd("~/Desktop")
+R_MetData_BSc <- read.csv("~/Desktop/R_MetData_BSc.csv")
+```
+
+It is always a good idea to look at the data to be sure it has been imported correctly.
+
+```{r}
+View(R_MetData_BSc)
+```
+
+## Including Boxplots 
+
+You can also embed plots, for example:
+
+```{r}
+boxplot(R_MetData_BSc$Tmin)
+```
+
+This plot is all the data across both sites. This might be useful if we were makig comarions to other data, but for looking for difference between the two sits this is useless!
+
+```{r}
+boxplot(R_MetData_BSc$Tmin~R_MetData_BSc$Site)
+```
+
+This plot is more useful and easy to make for quick comparisons. However, it is not very good quality overall. This is where ggplot can help!
+
+```{r}
+library(ggplot2)
+MinT<-ggplot (R_MetData_BSc, aes (x=Site, y=Tmin, fill=Site)) +
+  geom_boxplot()
+MinT
+```
+
+Of course color and other aesthetics can be useful to create high quality visualizations."Themes" are a useful way to achive better results (https://www.datanovia.com/en/blog/ggplot-themes-gallery/). The choices are limitless, but I suggest you try and mimic styles from published work. Here is just one example:
+
+```{r}
+library(ggthemes)
+MinT + theme_economist() +scale_fill_manual(values=c("#999999", "#56B4E9")) + ylab("Tmin C")
+```
+
+Sometimes it is useful to see distributions associated with the boxplot data too. Using violin plots can achieve this.
+
+```{r}
+MinT<-ggplot (R_MetData_BSc, aes (x=Site, y=Tmin, fill=Site)) +
+  geom_violin()
+MinT
+```
+
+It is easy to see the data distribution as the widths of the plots show the frequency of each value. These plots can also be modified to provide more information.
+
+```{r}
+MinT + geom_boxplot(width=0.1)
+```
+```{r}
+MinT + geom_boxplot(width=0.1) + theme_economist() +scale_fill_manual(values=c("#999999", "#56B4E9")) + ylab("Tmin C")
+```
+
+At the end of this exercise, you can Knit the document in to a html file (you can also Knot to a Word or PDF file). Do accomplish this use the Knit button above. Note for MAC you will need to have XQuartz installed (https://www.xquartz.org/).
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
